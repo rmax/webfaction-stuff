@@ -108,7 +108,7 @@ if __name__ == '__main__':
         print "usage: %s username password [machine]" % sys.argv[0]
         sys.exit()
 
-    api = Webfaction('josemanuel', 'd48c10970')
+    api = Webfaction(*sys.argv[1:])
     banner = """
     A convenient Webfaction api wrapper
     See docs: http://docs.webfaction.com/xmlrpc-api/apiref.html
