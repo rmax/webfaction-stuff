@@ -108,7 +108,6 @@ if __name__ == '__main__':
         print "usage: %s username password [machine]" % sys.argv[0]
         sys.exit()
 
-    api = Webfaction(*sys.argv[1:])
     banner = """
     A convenient Webfaction api wrapper
     See docs: http://docs.webfaction.com/xmlrpc-api/apiref.html
@@ -121,6 +120,11 @@ if __name__ == '__main__':
     Just do not use session_id parameter that it is already
     added to each api call."""
 
-    from IPython import Shell
-    Shell.IPShellEmbed([], banner)()
+    try:
+        api = Webfaction(*sys.argv[1:])
+    except xmlrpclib.Fault, e:
+        print >> sys.stderr, "RPC Error: %s" % e
+    else:
+        from IPython import Shell
+        Shell.IPShellEmbed([], banner)()
     
