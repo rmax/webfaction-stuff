@@ -61,6 +61,8 @@ APIREF = {
     'system': 'system(cmd)',
 }
 
+API_SESSION_METHODS = ('login',)
+
 class Webfaction(object):
     """This class represents webfaction api wrapper"""
 
@@ -85,10 +87,14 @@ class Webfaction(object):
         class wrap(object):
             def __init__(inner, attr):
                 inner.method = getattr(self.server, attr)
+                inner.add_sessid = attr in API_SESSION_METHODS
                 inner.__doc__ = APIREF.get(attr, 'unknown')
 
             def __call__(inner, *args, **kwargs):
-                return inner.method(self.session_id, *args, **kwargs)
+                if inner.add_sessid:
+                    return inner.method(self.session_id, *args, **kwargs)
+                else:
+                    return inner.method(*args, **kwargs)
 
             def __repr__(inner):
                 return '<Ref: %s>' % inner.__doc__
